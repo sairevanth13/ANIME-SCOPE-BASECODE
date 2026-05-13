@@ -98,17 +98,17 @@ function saveState() {
 
  async function syncMainframeData(username) {
     try {
-        const res = await fetch(`http://localhost:5000/api/users/data/${username}`);
+        const res = await fetch(`https://anime-scope-basecode.onrender.com/api/users/data/${username}`);
         if (!res.ok) return; 
 
         const data = await res.json();
 
-        // 1. Overwrite the main lists
+       
         localStorage.setItem(`favorites_${username}`, JSON.stringify(data.favourites));
         localStorage.setItem(`watchlist_${username}`, JSON.stringify(data.watchLater));
         localStorage.setItem(`completed_${username}`, JSON.stringify(data.completed));
         
-        // 2. Rebuild the Ratings locally
+       
         if (data.ratings) {
             data.ratings.forEach(rating => {
                 let fbKey = `fb_${rating.animeId}`;
@@ -118,16 +118,16 @@ function saveState() {
             });
         }
 
-        // 3. Rebuild the Comments locally
+        
         if (data.comments) {
             data.comments.forEach(comment => {
                 let fbKey = `fb_${comment.animeId}`;
                 let fb = JSON.parse(localStorage.getItem(fbKey)) || { ratings: {}, comments: [] };
                 
-                // Prevent duplicate comments if the user refreshes the page
+                
                 const exists = fb.comments.some(c => c.user === username && c.text === comment.text);
                 if (!exists) {
-                    // Push the comment exactly how your anime.html expects it
+                    
                     fb.comments.push({ user: username, text: comment.text, date: comment.date });
                     localStorage.setItem(fbKey, JSON.stringify(fb));
                 }
@@ -654,7 +654,7 @@ async function toggleCompleted(id, el) {
 
     const isRemoving = el.classList.contains("complete-active");
 
-    // 1. UI Update (Visual only)
+    
     if (isRemoving) {
         el.classList.remove("complete-active", "remove-action");
         el.classList.add("add-action");
@@ -663,14 +663,14 @@ async function toggleCompleted(id, el) {
         el.classList.remove("add-action");
     }
 
-    // 2. Database Sync
+
     try {
-        const response = await fetch('http://localhost:5000/api/users/toggle-list', {
+        const response = await fetch('https://anime-scope-basecode.onrender.com/api/users/toggle-list', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username: user,
-                listType: 'completed', // TELLS BACKEND TO USE COMPLETED ARRAY
+                listType: 'completed', 
                 anime: fullAnime,
                 action: isRemoving ? 'remove' : 'add'
             })
@@ -681,7 +681,7 @@ async function toggleCompleted(id, el) {
         console.error("Database sync failed:", error);
     }
 
-    // 3. LocalStorage Cache
+    
     let done = JSON.parse(localStorage.getItem("completed_" + user)) || [];
     if (isRemoving) {
         done = done.filter(item => (item.mal_id || item) !== id);
@@ -699,7 +699,7 @@ async function toggleFavorite(id, btn) {
 
     const isRemoving = btn.classList.contains("fav-active");
 
-    // UI Update (Visual only)
+   
     if (isRemoving) {
         btn.classList.remove("fav-active", "remove-action");
         btn.classList.add("add-action");
@@ -708,10 +708,10 @@ async function toggleFavorite(id, btn) {
         btn.classList.remove("add-action");
     }
 
-    // Database Sync
+    
    try {
-        // We MUST declare "const response =" here so we can read it below!
-        const response = await fetch('http://localhost:5000/api/users/toggle-list', {
+       
+        const response = await fetch('https://anime-scope-basecode.onrender.com/api/users/toggle-list', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -722,7 +722,7 @@ async function toggleFavorite(id, btn) {
             })
         });
 
-        // Now these lines will work perfectly
+        
         const serverReply = await response.json();
         console.log("STATUS CODE:", response.status);
         console.log("SERVER MESSAGE:", serverReply);
@@ -730,17 +730,17 @@ async function toggleFavorite(id, btn) {
     } catch (error) {
         console.error("Database sync failed:", error);
     }
-    // --- NEW: Restore LocalStorage Cache so the UI remembers on refresh ---
+    
     let fav = JSON.parse(localStorage.getItem("favorites_" + user)) || [];
     if (isRemoving) {
-        // Remove it from the local array
+        
         fav = fav.filter(item => (item.mal_id || item) !== id);
     } else {
-        // Add it to the local array
+       
         fav.push(fullAnime);
     }
     localStorage.setItem("favorites_" + user, JSON.stringify(fav));
-    // ----------------------------------------------------------------------
+    
 }
 
 async function toggleWatch(id, el) {
@@ -752,7 +752,7 @@ async function toggleWatch(id, el) {
 
     const isRemoving = el.classList.contains("watch-active");
 
-    // 1. UI Update (Visual only)
+  
     if (isRemoving) {
         el.classList.remove("watch-active", "remove-action");
         el.classList.add("add-action");
@@ -761,14 +761,14 @@ async function toggleWatch(id, el) {
         el.classList.remove("add-action");
     }
 
-    // 2. Database Sync
+    
     try {
-        const response = await fetch('http://localhost:5000/api/users/toggle-list', {
+        const response = await fetch('https://anime-scope-basecode.onrender.com/api/users/toggle-list', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username: user,
-                listType: 'watchLater', // TELLS BACKEND TO USE WATCH LATER ARRAY
+                listType: 'watchLater', 
                 anime: fullAnime,
                 action: isRemoving ? 'remove' : 'add'
             })
@@ -779,7 +779,7 @@ async function toggleWatch(id, el) {
         console.error("Database sync failed:", error);
     }
 
-    // 3. LocalStorage Cache
+   
     let watch = JSON.parse(localStorage.getItem("watchlist_" + user)) || [];
     if (isRemoving) {
         watch = watch.filter(item => (item.mal_id || item) !== id);
@@ -788,13 +788,13 @@ async function toggleWatch(id, el) {
     }
     localStorage.setItem("watchlist_" + user, JSON.stringify(watch));
 }
-// Call this when a user submits a review/comment
+
 async function saveCommentToDB(animeId, text) {
     const user = localStorage.getItem("currentUser");
     if (!user) return;
 
     try {
-        await fetch('http://localhost:5000/api/users/add-comment', {
+        await fetch('https://anime-scope-basecode.onrender.com/api/users/add-comment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: user, animeId: String(animeId), text: text })
@@ -805,13 +805,13 @@ async function saveCommentToDB(animeId, text) {
     }
 }
 
-// Call this when a user clicks a star rating
+
 async function saveRatingToDB(animeId, score) {
     const user = localStorage.getItem("currentUser");
     if (!user) return;
 
     try {
-        await fetch('http://localhost:5000/api/users/submit-rating', {
+        await fetch('https://anime-scope-basecode.onrender.com/api/users/submit-rating', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: user, animeId: String(animeId), score: Number(score) })

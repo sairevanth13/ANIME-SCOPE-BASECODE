@@ -4,7 +4,7 @@ const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        unique: true, // No two users can have the same name
+        unique: true, 
         trim: true
     },
     email: {
@@ -17,19 +17,19 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // Gmail Verification logic
+   
     isVerified: {
         type: Boolean,
         default: false
     },
     verificationToken: String,
 
-    // Your Anime Lists (Replacing Local Storage)
-    favourites: [{ type: Object }], // We store the whole anime object or just ID
+   
+    favourites: [{ type: Object }], 
     watchLater: [{ type: Object }],
     completed: [{ type: Object }],
 
-    // Social & Progress
+   
     comments: [{
         animeId: String,
         text: String,
@@ -41,8 +41,8 @@ const UserSchema = new mongoose.Schema({
     }],
     badges: {
         type: [String],
-        default: ['Newcomer'] // Everyone starts with this!
+        default: ['Newcomer'] 
     }
-}, { timestamps: true }); // Automatically adds "Created At" and "Updated At" fields
+}, { timestamps: true }); 
 
 module.exports = mongoose.model('User', UserSchema);

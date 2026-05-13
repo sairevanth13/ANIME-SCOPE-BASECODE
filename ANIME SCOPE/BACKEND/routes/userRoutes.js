@@ -1,10 +1,10 @@
-// backend/routes/userRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/authMiddleware');
 const User = require('../models/User');
 
-// --- 1. GET USER PROFILE & LISTS ---
+
 router.get('/profile', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
@@ -14,16 +14,14 @@ router.get('/profile', auth, async (req, res) => {
     }
 });
 
-// --- 2. ADD TO A LIST (Favourites, Watch Later, etc.) ---
-// Usage: POST to /api/user/list/favourites
 router.post('/list/:listType', auth, async (req, res) => {
     try {
-        const { animeData } = req.body; // The anime object (id, title, image)
-        const { listType } = req.params; // 'favourites', 'watchLater', or 'completed'
+        const { animeData } = req.body; 
+        const { listType } = req.params; 
 
         const user = await User.findById(req.user.id);
 
-        // Check if anime is already in the list
+       
         const exists = user[listType].some(item => item.id === animeData.id);
         if (exists) return res.status(400).json({ msg: "Already in list" });
 
@@ -35,7 +33,7 @@ router.post('/list/:listType', auth, async (req, res) => {
     }
 });
 
-// --- 3. REMOVE FROM A LIST ---
+
 router.delete('/list/:listType/:animeId', auth, async (req, res) => {
     try {
         const { listType, animeId } = req.params;
@@ -48,14 +46,11 @@ router.delete('/list/:listType/:animeId', auth, async (req, res) => {
         res.status(500).json({ msg: "Error removing item" });
     }
 });
-// Make sure your User model is imported at the top of this file!
 
-// 1. DYNAMIC ROUTE FOR LISTS (Favourites, Watch Later, Completed)
-// This handles all 3 button types using the "listType" variable!
 router.post('/toggle-list', async (req, res) => {
     const { username, listType, anime, action } = req.body;
 
-    // Security check: ensure listType is exactly one of our schema arrays
+   
     if (!['favourites', 'watchLater', 'completed'].includes(listType)) {
         return res.status(400).json({ error: "Invalid list type" });
     }
@@ -63,7 +58,7 @@ router.post('/toggle-list', async (req, res) => {
     try {
         let updateQuery = {};
         if (action === 'add') {
-            // Use [listType] to dynamically select the array in your schema
+          
             updateQuery = { $push: { [listType]: anime } };
         } else if (action === 'remove') {
             updateQuery = { $pull: { [listType]: { mal_id: anime.mal_id } } };
@@ -77,16 +72,15 @@ router.post('/toggle-list', async (req, res) => {
     }
 });
 
-// 2. ROUTE FOR RATINGS
 router.post('/submit-rating', async (req, res) => {
     const { username, animeId, score } = req.body;
     try {
-        // First, pull any existing rating for this specific anime so they don't duplicate
+        
         await User.findOneAndUpdate(
             { username: username },
             { $pull: { ratings: { animeId: animeId } } }
         );
-        // Then, push the new updated score
+       
         await User.findOneAndUpdate(
             { username: username },
             { $push: { ratings: { animeId: animeId, score: score } } }
@@ -98,7 +92,7 @@ router.post('/submit-rating', async (req, res) => {
     }
 });
 
-// 3. ROUTE FOR COMMENTS
+
 router.post('/add-comment', async (req, res) => {
     const { username, animeId, text } = req.body;
     try {
@@ -115,17 +109,17 @@ router.post('/add-comment', async (req, res) => {
 
 
 
-// --- ADD THIS NEW CLEAR-LIST ROUTE ---
+
 router.post('/clear-list', async (req, res) => {
     const { username, listType } = req.body;
 
-    // Security check: match your User.js schema names
+    
     if (!['favourites', 'watchLater', 'completed'].includes(listType)) {
         return res.status(400).json({ error: "Invalid list type" });
     }
 
     try {
-        // Use $set to reset the specific array to empty []
+       
         await User.findOneAndUpdate(
             { username: username },
             { $set: { [listType]: [] } }
@@ -137,7 +131,7 @@ router.post('/clear-list', async (req, res) => {
     }
 });
 
-// --- MOVE THIS ROUTE ABOVE MODULE.EXPORTS ---
+
 router.get('/data/:username', async (req, res) => {
     try {
         const user = await User.findOne({ username: req.params.username });
@@ -160,11 +154,11 @@ router.get('/data/:username', async (req, res) => {
     }
 });
 
-// --- ROUTE TO REMOVE A RATING ---
+
 router.post('/remove-rating', async (req, res) => {
     const { username, animeId } = req.body;
     try {
-        // Use $pull to remove the rating object that matches the animeId
+       
         await User.findOneAndUpdate(
             { username: username },
             { $pull: { ratings: { animeId: String(animeId) } } }
@@ -176,11 +170,11 @@ router.post('/remove-rating', async (req, res) => {
     }
 });
 
-// --- ROUTE TO REMOVE A COMMENT ---
+
 router.post('/remove-comment', async (req, res) => {
     const { username, animeId, text } = req.body;
     try {
-        // Since comments don't have unique IDs in your schema, we match by animeId and the text
+        
         await User.findOneAndUpdate(
             { username: username },
             { $pull: { comments: { animeId: String(animeId), text: text } } }
@@ -192,5 +186,5 @@ router.post('/remove-comment', async (req, res) => {
     }
 });
 
-// THIS MUST BE THE ABSOLUTE LAST LINE OF THE FILE
+
 module.exports = router;

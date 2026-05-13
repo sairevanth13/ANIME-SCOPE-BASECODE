@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* YOUR EXACT CSS - ZERO CHANGES */
+       
         .auth-box { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images7.alphacoders.com/611/611138.png'); background-size: cover; }
         .card { width: 350px; padding: 40px; background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid var(--accent); text-align: center; transition: transform 0.3s, background 0.3s; }
         .field { margin-bottom: 20px; text-align: left; }
@@ -106,7 +106,7 @@
 
         async function apiRequest(endpoint, body) {
             try {
-                const res = await fetch(`http://localhost:5000/api/auth${endpoint}`, {
+                const res = await fetch(`https://anime-scope-basecode.onrender.com/api/auth${endpoint}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
@@ -165,7 +165,7 @@
             }
         };
 
-        // --- SUBMITTING LOGIN OR SIGNUP ---
+        
         document.getElementById('authForm').onsubmit = async (e) => {
             e.preventDefault();
             const mainInput = document.getElementById('main-input').value.trim();
@@ -173,7 +173,7 @@
             const userInput = document.getElementById('user').value.trim();
 
            if (isLog) {
-                // THE UPGRADE: Smart scanner checks if they typed an email or a codename
+                
                 const payload = mainInput.includes('@') 
                     ? { email: mainInput.toLowerCase(), password: passInput } 
                     : { username: mainInput, password: passInput };
@@ -212,7 +212,7 @@
                     password: passInput 
                 });
 
-                // THE FIX: Changed to toLowerCase() so it catches "check your email" perfectly every time!
+                
                 if (data.msg.toLowerCase().includes("check your email") || data.msg.toLowerCase().includes("successful")) {
                     localStorage.setItem('tempEmail', smallEmail);
                     
@@ -229,7 +229,7 @@
             }
         };
 
-        // --- SUBMITTING THE OTP CODE ---
+        
         document.getElementById('otpForm').onsubmit = async (e) => {
             e.preventDefault();
             
@@ -238,7 +238,7 @@
             
             const data = await apiRequest('/verify', { email, code });
             
-            // Fixed case-sensitivity here too just in case!
+            
             if (data.msg.toLowerCase().includes("success")) {
                 alert("ACCOUNT ACTIVATED! You can now log in.");
                 location.reload(); 

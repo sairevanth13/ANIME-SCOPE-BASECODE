@@ -943,28 +943,28 @@ let watchLater = JSON.parse(localStorage.getItem(watchKey)) || [];
 let completed = JSON.parse(localStorage.getItem(completeKey)) || [];
 
      
-// --- DATABASE IDENTITY FETCH ---
+
 async function loadIdentity() {
     try {
-        // Fetch everything directly from the mainframe!
-        const res = await fetch(`http://localhost:5000/api/users/data/${user}`);
+        
+        const res = await fetch(`https://anime-scope-basecode.onrender.com/api/users/data/${user}`);
         if (!res.ok) throw new Error("Failed to summon data");
 
         const data = await res.json();
 
-        // 1. Update Username (Gold Text)
+       
         document.getElementById("display-username").innerText = user.toUpperCase();
 
-        // 2. Update Gmail (Platinum Text)
+       
         document.getElementById("display-gmail").innerText = data.email || "UNKNOWN@GMAIL.COM";
 
-        // 3. Update Join Date using Mongoose's 'createdAt' timestamp
+       
         const date = new Date(data.createdAt);
         document.getElementById("display-join-date").innerText = date.toLocaleDateString('en-GB', {
             day: 'numeric', month: 'long', year: 'numeric'
         });
 
-        // Trigger Badges using the real join date from the cloud
+      
         updateBadges(data.createdAt);
 
     } catch (error) {
@@ -975,7 +975,7 @@ async function loadIdentity() {
     }
 }
 
-// Update this function to accept the real cloud date
+
 function updateBadges(joinDateString) {
     const joinDate = new Date(joinDateString);
     const now = new Date();
@@ -1082,16 +1082,16 @@ const savedPos = sessionStorage.getItem("profileScrollPos");
         sessionStorage.removeItem("profileScrollPos");
     }
      
-// REMOVE FROM FAVOURITES
+
 async function removeFavorite(id) {
     try {
-        await fetch('http://localhost:5000/api/users/toggle-list', {
+        await fetch('https://anime-scope-basecode.onrender.com/api/users/toggle-list', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 username: user,
                 listType: 'favourites',
-                anime: { mal_id: id }, // Send the ID so the backend can pull it
+                anime: { mal_id: id }, 
                 action: 'remove'
             })
         });
@@ -1102,10 +1102,10 @@ async function removeFavorite(id) {
     refreshUI();
 }
 
-// REMOVE FROM WATCH LATER
+
 async function removeWatch(id) {
     try {
-        await fetch('http://localhost:5000/api/users/toggle-list', {
+        await fetch('https://anime-scope-basecode.onrender.com/api/users/toggle-list', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1122,10 +1122,10 @@ async function removeWatch(id) {
     refreshUI();
 }
 
-// REMOVE FROM COMPLETED
+
 async function removeCompleted(id) {
     try {
-        await fetch('http://localhost:5000/api/users/toggle-list', {
+        await fetch('https://anime-scope-basecode.onrender.com/api/users/toggle-list', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1142,13 +1142,13 @@ async function removeCompleted(id) {
     refreshUI();
 }
 
-// SYNC: Move a Favourite to Watch Later
+
 async function favToWatch(id) {
     const item = favorites.find(i => (i.mal_id || i) === id);
     if (item && !watchLater.some(w => (w.mal_id || w) === id)) {
-        // --- MAINFRAME SYNC: Add to Watch Later ---
+        
         try {
-            await fetch('http://localhost:5000/api/users/toggle-list', {
+            await fetch('https://anime-scope-basecode.onrender.com/api/users/toggle-list', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1163,20 +1163,19 @@ async function favToWatch(id) {
             console.error("Database sync failed:", e);
         }
 
-        // Local Update
         watchLater.push(item);
         localStorage.setItem(watchKey, JSON.stringify(watchLater));
         refreshUI();
     }
 }
 
-// SYNC: Move a Watch Later to Favourites
+
 async function watchToFav(id) {
     const item = watchLater.find(i => (i.mal_id || i) === id);
     if (item && !favorites.some(f => (f.mal_id || f) === id)) {
-        // --- MAINFRAME SYNC: Add to Favourites ---
+       
         try {
-            await fetch('http://localhost:5000/api/users/toggle-list', {
+            await fetch('https://anime-scope-basecode.onrender.com/api/users/toggle-list', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1191,7 +1190,7 @@ async function watchToFav(id) {
             console.error("Database sync failed:", e);
         }
 
-        // Local Update
+        
         favorites.push(item);
         localStorage.setItem(favKey, JSON.stringify(favorites));
         refreshUI();
@@ -1202,16 +1201,15 @@ async function clearList(listType) {
     const user = localStorage.getItem("currentUser");
     if (!user) return;
 
-    // 1. MAP UI NAMES TO DATABASE NAMES
-    // This is the fix! UI 'favorites' -> DB 'favourites' | UI 'watchlist' -> DB 'watchLater'
+    
     let dbListType = listType;
     if (listType === 'favorites') dbListType = 'favourites';
     if (listType === 'watchlist') dbListType = 'watchLater';
 
     if (confirm(`ARE YOU SURE? This will permanently wipe your ${listType} list from the cloud.`)) {
         try {
-            // 2. TELL THE BACKEND TO NUKE THE LIST
-            const response = await fetch('http://localhost:5000/api/users/clear-list', {
+            
+            const response = await fetch('https://anime-scope-basecode.onrender.com/api/users/clear-list', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -1224,7 +1222,7 @@ async function clearList(listType) {
             
             console.log(`MAINFRAME: ${dbListType} wiped successfully.`);
 
-            // 3. WIPE LOCAL STORAGE AND UPDATE UI
+            
             if (listType === 'completed') { 
                 localStorage.removeItem(completeKey); 
                 completed = []; 
@@ -1236,7 +1234,7 @@ async function clearList(listType) {
                 watchLater = []; 
             }
 
-            refreshUI(); // Re-renders the list as empty
+            refreshUI(); 
             
         } catch (e) {
             console.error("DB Wipe Failed:", e);

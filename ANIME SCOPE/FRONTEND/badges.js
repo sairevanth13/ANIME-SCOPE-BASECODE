@@ -90,20 +90,20 @@ const badgeLibrary = {
 };
 
   
-// frontend/js/badge.js
+
 
 async function loadUserBadges() {
     try {
-        // 1. Get the data from your new Backend instead of local storage
+      
         const response = await fetch('/api/user/badges'); 
         const data = await response.json();
         
         const badgeContainer = document.getElementById('badge-display');
         
-        // 2. Loop through the badges sent from MongoDB
+    
         data.badges.forEach(badgeName => {
             const img = document.createElement('img');
-            img.src = `assets/badges/${badgeName}.png`; // Dynamic path
+            img.src = `assets/badges/${badgeName}.png`; 
             img.className = 'badge-icon';
             badgeContainer.appendChild(img);
         });
@@ -111,23 +111,23 @@ async function loadUserBadges() {
         console.error("Couldn't load badges:", err);
     }
 }
-// THE BADGE "LIBRARIAN" FUNCTION
+
 function getEarnedBadge(type, value) {
     const library = badgeLibrary[type];
     if (!library) return null;
 
-    // 1. Grab all the milestone numbers (5, 10, 15, etc.) and sort them highest to lowest
+    
     const milestones = Object.keys(library).map(Number).sort((a, b) => b - a);
 
-    // 2. Look through the milestones and find the highest one the user has reached
+   
     for (let milestone of milestones) {
         if (value >= milestone) {
-            // Return the matching badge object (name, color, aura) from your awesome library
+           
             return library[milestone]; 
         }
     }
 
-    // 3. If they haven't reached the very first milestone yet, give them the starting rank
+    
     if (type === 'pathOfSorcerer') {
         return { name: "ROOKIE", color: "#94a3b8", aura: "unranked-aura" };
     } else {

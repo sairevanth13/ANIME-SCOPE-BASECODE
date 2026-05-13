@@ -378,9 +378,9 @@ async function submitRating(val) {
     
     const animeId = new URLSearchParams(window.location.search).get("id");
 
-    // --- NEW: SYNC TO MONGODB BACKEND ---
+    
     try {
-        await fetch('http://localhost:5000/api/users/submit-rating', {
+        await fetch('https://anime-scope-basecode.onrender.com/api/users/submit-rating', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: user, animeId: String(animeId), score: Number(val) })
@@ -389,9 +389,7 @@ async function submitRating(val) {
     } catch (error) {
         console.error("Failed to save rating to DB:", error);
     }
-    // ------------------------------------
-
-    // Keep existing UI logic to make the stars update instantly on screen
+   
     let fb = JSON.parse(localStorage.getItem(`fb_${animeId}`)) || { ratings: {}, comments: [] };
     if (Array.isArray(fb.ratings)) { fb.ratings = {}; }
     
@@ -407,9 +405,9 @@ async function removeRating() {
     const animeId = new URLSearchParams(window.location.search).get("id");
 
     if (confirm("Remove your rating from the records?")) {
-        // 1. SYNC TO DATABASE: Purge the rating
+        
         try {
-            await fetch('http://localhost:5000/api/users/remove-rating', {
+            await fetch('https://anime-scope-basecode.onrender.com/api/users/remove-rating', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: user, animeId: String(animeId) })
@@ -419,7 +417,7 @@ async function removeRating() {
             console.error("Failed to sync removal:", error);
         }
 
-        // 2. Local Update (Keep your existing UI logic)
+       
         let fb = JSON.parse(localStorage.getItem(`fb_${animeId}`));
         delete fb.ratings[user]; 
         localStorage.setItem(`fb_${animeId}`, JSON.stringify(fb));
@@ -445,9 +443,9 @@ async function submitComment() {
 
     const animeId = new URLSearchParams(window.location.search).get("id");
 
-    // --- NEW: SYNC TO MONGODB BACKEND ---
+    
     try {
-        await fetch('http://localhost:5000/api/users/add-comment', {
+        await fetch('https://anime-scope-basecode.onrender.com/api/users/add-comment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: user, animeId: String(animeId), text: text })
@@ -456,9 +454,9 @@ async function submitComment() {
     } catch (error) {
         console.error("Failed to save comment to DB:", error);
     }
-    // ------------------------------------
+    
 
-    // Keep existing UI logic to display the comment immediately
+    
     let fb = JSON.parse(localStorage.getItem(`fb_${animeId}`)) || { ratings: {}, comments: [] };
     
     const newComment = {
@@ -480,13 +478,13 @@ async function deleteComment(index) {
     const animeId = new URLSearchParams(window.location.search).get("id");
     let fb = JSON.parse(localStorage.getItem(`fb_${animeId}`));
 
-    // Grab the specific comment data before we delete it locally
+   
     const commentToDelete = fb.comments[index];
 
     if (confirm("Delete this comment?")) {
-        // 1. SYNC TO DATABASE: Erase the comment
+       
         try {
-            await fetch('http://localhost:5000/api/users/remove-comment', {
+            await fetch('https://anime-scope-basecode.onrender.com/api/users/remove-comment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -500,7 +498,7 @@ async function deleteComment(index) {
             console.error("Failed to sync removal:", error);
         }
 
-        // 2. Local Update (Keep your existing UI logic)
+       
         fb.comments.splice(index, 1);
         localStorage.setItem(`fb_${animeId}`, JSON.stringify(fb));
         loadFeedback(document.getElementById("api-score").innerText);
