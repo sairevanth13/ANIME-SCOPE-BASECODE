@@ -5,34 +5,23 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken'); 
 const User = require('../models/User');
 
+const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
+    service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    },
-   
-    tls: {
-        rejectUnauthorized: false
-    },
-    connectionTimeout: 10000, 
-    dnsLookup: (hostname, options, callback) => {
-        require('dns').lookup(hostname, { family: 4 }, callback);
     }
 });
-
 
 transporter.verify((error, success) => {
     if (error) {
-        console.error('❌ Email Config Error:', error.message);
+        console.error('❌ Email Config Error:', error);
     } else {
-        console.log('✅ Email service ready to Summon!');
+        console.log('✅ Email service ready!');
     }
 });
-
 
 
 
@@ -69,12 +58,15 @@ router.post('/signup', async (req, res) => {
 
        
         const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Verify your AnimeScope Account',
-            html: `<h1>Welcome to AnimeScope!</h1>
-                   <p>Your verification code is: <b>${verificationCode}</b></p>`
-        };
+    from: `"AnimeScope" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: 'Verify your AnimeScope Account',
+    html: `
+        <h2>Welcome to AnimeScope 🎉</h2>
+        <p>Your verification code is:</p>
+        <h1>${verificationCode}</h1>
+    `
+};
 
         try {
             await transporter.sendMail(mailOptions);
