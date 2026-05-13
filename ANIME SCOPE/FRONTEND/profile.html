@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anime Scope | Profile</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+
+<style>
+.profile-header{ text-align:center; padding:40px 20px; }
+.profile-name{ font-family:'Orbitron'; font-size:32px; color:var(--accent); margin-bottom:10px; }
+.profile-sub{ color:gray; font-size:14px; }
+.profile-section{ padding:20px 5%; }
+.profile-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:20px; margin-top:20px; }
+.empty-msg{ text-align:center; color:gray; margin-top:20px; }
+.back-home{ display:inline-block; margin-top:10px; color:var(--accent); font-family:'Orbitron'; text-decoration:none; }
+.card-actions{ position:absolute; top:8px; right:8px; display:flex; flex-direction:column; gap:6px; z-index:10; }
+.action-btn{ cursor:pointer; font-size:18px; user-select:none; transition:0.2s; }
+.action-btn:hover{ transform:scale(1.2); }
+.fav-active{ color:#ff4c60; }
+.watch-active{ color:#39ff14; }
+    
+.complete-active { color: #00ffcc !important; text-shadow: 0 0 10px #00ffcc; }
+
+.anime-card{ position:relative; background:var(--card-bg); border-radius:12px; overflow:hidden; transition:0.3s; border:1px solid rgba(255,255,255,0.05); }
+.anime-card img{ width:100%; height:260px; object-fit:cover; }
+.quick-look{ position:absolute; bottom:-100%; left:0; width:100%; height:40%; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:10px; transition:0.3s; opacity:0; display:flex; flex-direction:column; justify-content:flex-end; }
+.anime-card:hover { 
+    transform: translateY(-8px); 
+    border-color: var(--accent); 
+}
+.anime-card:hover .quick-look{ bottom:0; opacity:1; }
+.rating{ font-weight:bold; padding:10px; font-size:13px; color:gold; text-shadow:0 0 5px rgba(0,0,0,0.5); }
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+    font-family: 'Orbitron';
+    font-size: 18px;
+    color: var(--accent);
+}
+
+.clear-profile-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 76, 96, 0.3);
+    color: rgba(255, 76, 96, 0.6);
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-family: 'Orbitron';
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.clear-profile-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent);
+}
+
+.command-center {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 15px;
+    margin: 20px 5%;
+    padding: 30px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.identity-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.gold-text { color: #fbbf24; font-family: 'Orbitron'; text-shadow: 0 0 10px rgba(251, 191, 36, 0.4); }
+.platinum-text { color: #e2e8f0; font-family: 'Poppins'; font-weight: bold; }
+
+.meta-item { font-size: 12px; color: #64748b; margin: 5px 0; }
+
+    
+.badge-display { display: flex; gap: 20px; }
+.badge-slot { text-align: center; }
+.badge-label { font-size: 8px; color: #94a3b8; display: block; margin-bottom: 5px; }
+.active-badge {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Orbitron';
+    font-size: 11px;
+    border: 1px solid;
+    transition: 0.5s;
+}
+
+    
+.security-hub { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; }
+
+
+
+
+
+.hidden-form input {
+    background: #0f172a;
+    border: 1px solid #334155;
+    padding: 10px;
+    color: white;
+    border-radius: 5px;
+    outline: none;
+}
+ 
+
+     
+.electric-cyan, .white-lightning, .diamond-sparkle {
+    animation: cyan-flicker 1s infinite alternate;
+    box-shadow: 0 0 15px currentColor;
+}
+@keyframes cyan-flicker {
+    0% { filter: brightness(1) contrast(1); opacity: 1; }
+    100% { filter: brightness(2) contrast(1.5); opacity: 0.8; box-shadow: 0 0 30px currentColor; }
+}
+
+     
+.dragon-aura, .golden-heat, .solar-flare {
+    animation: dragon-breathe 3s infinite ease-in-out;
+    border: 2px solid #fff !important;
+    background: rgba(255,255,255,0.1);
+}
+@keyframes dragon-breathe {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 10px currentColor; }
+    50% { transform: scale(1.1); box-shadow: 0 0 40px currentColor, inset 0 0 20px rgba(255,255,255,0.5); }
+}
+
+     
+.galaxy-spiral, .void-distortion, .nebula-texture, .nebula-aura {
+    animation: cosmic-shift 6s infinite linear;
+    background: #000;
+}
+@keyframes cosmic-shift {
+    0% { box-shadow: 0 0 20px #4169e1, -10px -10px 30px #9932cc; }
+    50% { box-shadow: 10px -10px 40px #ff1493, 0 0 20px #00ffff; }
+    100% { box-shadow: 0 0 20px #4169e1, -10px -10px 30px #9932cc; }
+}
+
+     
+.glitch-aura {
+    animation: glitch-anim 0.3s infinite;
+    text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
+}
+@keyframes glitch-anim {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+     
+
+     
+.black-flash-particles, .red-black-lightning, .haki-pulse {
+    animation: black-flash-hit 0.2s infinite;
+    background: #000;
+    color: #ff0000 !important;
+}
+@keyframes black-flash-hit {
+    0% { box-shadow: 0 0 5px #f00; transform: skewX(-5deg); }
+    50% { box-shadow: 0 0 25px #000, 0 0 15px #f00; transform: skewX(5deg); }
+}
+
+     
+.blood-red-flame, .volcanic-orange, .scythe-glow, .blood-glow {
+    animation: flame-burn 0.6s infinite alternate;
+}
+@keyframes flame-burn {
+    0% { box-shadow: 0 -5px 10px currentColor; }
+    100% { box-shadow: 0 -15px 25px currentColor; transform: translateY(-2px); }
+}
+
+     
+.static-yellow, .emerald-static, .violet-static {
+    animation: static-zap 0.1s infinite;
+}
+@keyframes static-zap {
+    0% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0.9; transform: translateX(1px); filter: contrast(1.5); }
+}
+
+     
+
+     
+.swirling-mist, .white-smoke, .grey-smoke, .purple-haze, .indigo-shadow {
+    animation: mist-drift 4s infinite ease-in-out;
+    filter: blur(0.5px);
+}
+@keyframes mist-drift {
+    0%, 100% { opacity: 0.6; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-3px); box-shadow: 0 5px 15px currentColor; }
+}
+
+     
+.digital-grid, .thread-pattern, .clock-gear, .glass-shards {
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 4px);
+    animation: pattern-scroll 10s infinite linear;
+}
+@keyframes pattern-scroll {
+    from { background-position: 0 0; }
+    to { background-position: 50px 50px; }
+}
+
+     
+
+     
+.heavenly-shine, .pure-light, .starlight, .silver-supernova, .platinum-shine, .silver-shine {
+    background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%);
+    background-size: 200% 100%;
+    animation: sweep-light 3s infinite;
+}
+@keyframes sweep-light {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+     
+.faint-glow, .blue-spark, .blue-flame, .purple-aura, .pink-aura, .teal-pulse, .maroon-pulse, .azure-orbitals, .jade-glow {
+    animation: simple-pulse 2s infinite ease-in-out;
+}
+@keyframes simple-pulse {
+    0%, 100% { box-shadow: 0 0 5px currentColor; opacity: 0.8; }
+    50% { box-shadow: 0 0 15px currentColor; opacity: 1; }
+}
+
+
+     
+     
+.meta-item-large {
+    font-size: 15px;      
+    color: #94a3b8;
+    font-family: 'Orbitron', sans-serif;
+    display: flex; 
+    align-items: center;      
+    gap: 12px;
+    margin: 12px 0;
+    position: relative;      
+}
+
+.meta-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;      
+    width: 24px;
+    position: static !important;      
+}
+
+.platinum-text {
+    color: #e2e8f0;
+    font-weight: bold;
+    margin-left: 5px;
+    text-shadow: 0 0 10px rgba(226, 232, 240, 0.2);
+}
+
+     
+     
+.command-nav {
+    display: flex;
+    justify-content: center;      
+    align-items: center;
+    position: relative;          
+    width: 100%;
+    margin-bottom: 40px;
+    padding: 10px 0;
+}
+
+     
+.back-btn {
+    position: absolute;
+    left: 0;
+    padding: 7px 18px;
+    background: transparent;
+    border: 1px solid #94a3b8;
+    color: #94a3b8;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    color: #fbbf24;
+    border-color: #fbbf24;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+}
+
+     
+.main-logo-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    margin: 0;
+    
+         
+    background: linear-gradient(90deg, #00ffff, #ff00ff, #fbbf24, #00ffff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: logo-vibe 6s linear infinite;
+    
+    cursor: default;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+     
+.main-logo-text:hover {
+    letter-spacing: 12px;      
+    transform: scale(1.05);      
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes logo-vibe {
+    to { background-position: 200% center; }
+}
+     
+.user-meta {
+    margin-left: 5%;      
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;      
+}
+
+     
+.meta-details {
+    padding-left: 5px;      
+}
+     
+.identity-grid {
+    display: flex;
+    justify-content: flex-start;      
+    align-items: center;             
+    gap: 80px;                       
+    padding: 30px 0;
+}
+
+     
+.user-meta {
+    margin-left: 7%;      
+    flex-shrink: 0;
+}
+
+     
+.badge-display {
+    display: flex;
+    flex-direction: column;         
+    gap: 25px;                      
+    margin-right: 0;                
+}
+
+     
+.badge-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.badge-label {
+    font-size: 10px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+     
+.active-badge {
+    min-width: 160px;      
+    text-align: center;
+}
+
+
+     
+.meta-item-large {
+    color: #4b5563;      
+    font-size: 15px;
+    font-weight: 600;
+}
+
+     
+.active-badge {
+    background: #ffffff;
+    border: 2px solid #94a3b8;      
+    color: #1e293b;      
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+}
+
+     
+.badge-label {
+    color: #64748b;      
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+.active-badge:hover {
+    transform: translateY(-3px);
+    border-color: #334155;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+     
+.active-badge {
+         
+    background: rgba(255, 255, 255, 0.03); 
+         
+    border: 1px solid rgba(148, 163, 184, 0.2); 
+    
+    color: #e2e8f0;      
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    text-align: center;
+    min-width: 160px;
+    
+         
+    backdrop-filter: blur(4px); 
+    transition: all 0.4s ease;
+}
+
+     
+.grade-1-aura {
+    border-color: rgba(168, 85, 247, 0.6);      
+    color: #d8b4fe;      
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);      
+}
+
+     
+.unranked-aura {
+    border-color: rgba(148, 163, 184, 0.3);
+    color: #94a3b8;      
+}
+
+     
+.active-badge:hover {
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateY(-2px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+
+     
+.meta-icon {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+    margin-right: 8px;
+}
+.meta-item-large {
+    color: #94a3b8;      
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.platinum-text {
+         
+    color: rgb(10, 144, 240); 
+    
+         
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    
+         
+    text-shadow: none; 
+    
+    transition: color 0.3s ease;
+}
+
+     
+@media (prefers-color-scheme: dark) {
+    .platinum-text {
+        color: #94a3b8;      
+    }
+}
+#view-seal-btn:hover {
+    opacity: 1 !important;
+    transform: scale(1.2);
+    text-shadow: 0 0 10px var(--accent);
+}
+.security-hub { 
+    background: rgba(0,0,0,0.2); 
+    padding: 15px 25px; 
+    border-radius: 10px; 
+    max-width: 600px;      
+    margin: 20px auto;      
+    border: 1px solid rgba(255, 255, 255, 0.05);      
+}
+
+     
+
+
+     
+.rating-best {
+    color: #00eaff !important;
+    text-shadow: 0 0 8px #00eaff, 0 0 15px rgba(0, 234, 255, 0.7);
+    animation: glowBlue 2s infinite alternate;
+}
+
+.rating-good {
+    color: #00ff88 !important;
+    text-shadow: 0 0 8px #00ff88, 0 0 15px rgba(0, 255, 136, 0.7);
+    animation: glowGreen 2s infinite alternate;
+}
+
+.rating-low {
+    color: #ff4c4c !important;
+    text-shadow: 0 0 8px #ff4c4c, 0 0 15px rgba(255, 76, 76, 0.7);
+    animation: glowRed 2s infinite alternate;
+}
+
+     
+@keyframes glowBlue { from { text-shadow: 0 0 5px #00eaff; } to { text-shadow: 0 0 20px #00eaff; } }
+@keyframes glowGreen { from { text-shadow: 0 0 5px #00ff88; } to { text-shadow: 0 0 20px #00ff88; } }
+@keyframes glowRed { from { text-shadow: 0 0 5px #ff4c4c; } to { text-shadow: 0 0 20px #ff4c4c; } }
+     
+.rating {
+    position: absolute;
+    bottom: 8px;      
+    left: 8px;
+    background: rgba(0, 0, 0, 0.7); 
+         
+    padding: 2px 10px; 
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Orbitron', sans-serif;
+    z-index: 10;      
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+     
+.card-info {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;      
+}
+
+
+
+.anime-card h3 {
+    font-size: 14px;
+    color: black;
+    margin: 4px 0;
+    height: 40px;      
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+     
+.anime-card h3 {
+    color: var(--text) !important;
+    transition: color 0.3s ease;
+}
+
+     
+.quick-look p {
+    color: #ffffff;      
+}
+     
+     
+     
+.security-hub {
+    background: rgba(15, 23, 42, 0.6);      
+    border: 2px solid rgba(255, 76, 96, 0.3);      
+    border-radius: 20px;
+    padding: 30px 50px;      
+    max-width: 1100px;
+    margin: 40px auto;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+
+     
+body.light-theme .security-hub {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--accent);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+.hub-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+
+
+.info-tag {
+    font-family: 'Orbitron';
+    font-size: 12px;
+    color: var(--accent);      
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.ultra-email {
+    font-size: 26px;      
+    font-weight: 900;
+    color: var(--text);      
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 0.5px;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ultra-email:hover {
+    color: var(--accent);
+    text-shadow: 0 0 20px var(--accent);
+    transform: scale(1.02);
+}
+
+.community-note {
+    font-family: 'Orbitron';
+    font-size: 13px;      
+    letter-spacing: 2px;
+    color: var(--text);
+    opacity: 0.9;      
+    margin: 12px 0 6px;
+    font-weight: 700;
+}
+
+.footer-small {
+    font-size: 11px;      
+    color: var(--text);
+    opacity: 0.5;
+    margin: 0;
+    font-family: 'Poppins';
+}
+
+     
+body.light-theme .info-tag { color: #8b0000; }
+body.light-theme .community-note { opacity: 1; color: #1e293b; }
+     
+.hub-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;      
+    gap: 0;      
+}
+
+
+     
+.ultra-email {
+    font-size: 26px !important;      
+    white-space: nowrap;      
+}
+
+     
+body.light-theme .hub-divider {
+    background: #000 !important;
+    box-shadow: none !important;
+    opacity: 0.2 !important;
+}
+     
+.hub-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;      
+    width: 100%;
+}
+
+     
+.hub-piece { 
+    flex: 1; 
+}
+
+     
+.info-side { 
+    text-align: right; 
+    padding-left: 40px;      
+}
+
+     
+.ultra-email {
+    font-size: 26px !important;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+     
+body.light-theme .hub-divider {
+    background: #000 !important;
+    box-shadow: none !important;
+    opacity: 0.15 !important;
+}
+     
+.video-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;      
+    overflow: hidden;
+}
+
+#bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;      
+    filter: brightness(0.6);      
+}
+
+     
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, transparent 20%, rgba(15, 23, 42, 0.8) 100%);
+    pointer-events: none;
+}
+
+     
+body.light-theme .video-overlay {
+    background: rgba(255, 255, 255, 0.7);
+}
+body.light-theme #bg-video {
+    filter: brightness(1.2) grayscale(0.5);      
+}
+     
+.header-background-zone {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+         
+}
+
+.video-bg-container {
+    position: absolute;      
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5) contrast(1.1);
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 20%, rgba(15, 23, 42, 0.8) 100%);
+}
+
+     
+.identity-grid, .security-hub {
+    position: relative;
+    z-index: 1;
+    background: transparent !important;      
+}
+
+
+     
+
+     
+body.light-theme .ultra-email, 
+body.light-theme .community-note,
+body.light-theme .footer-small,
+body.light-theme .hub-label {
+    color: #ffffff !important;      
+}
+
+     
+body.light-theme .info-tag { 
+    color: #fbbf24 !important;      
+}
+
+     
+body.light-theme .security-hub {
+    background: rgba(0, 0, 0, 0.4) !important;      
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+#bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+         
+    filter: brightness(0.8) contrast(1.2); 
+}
+     
+body.light-theme .video-overlay {
+    background: rgba(15, 23, 42, 0.2) !important; 
+}
+
+     
+body.light-theme #bg-video {
+    filter: brightness(0.9) contrast(1.1) !important; 
+}
+     
+
+
+     
+body.light-theme .ultra-email:hover {
+    color: var(--accent) !important;          
+    text-shadow: 0 0 15px var(--accent) !important;
+    transform: scale(1.05);
+}
+
+     
+body.light-theme #display-gmail:hover {
+    color: var(--accent) !important;
+    cursor: pointer;
+}
+::selection{
+    color: #00eaff;
+    background-color: azure;
+}
+</style>
+</head>
+<body>
+   <div class="header-background-zone">
+        
+        <div class="video-bg-container">
+            <video autoplay muted loop playsinline id="bg-video">
+                <source src="91562-629172467_medium.mp4" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+
+        <div class="command-nav">
+            <button onclick="location.href='index.html'" class="back-btn">⬅ BACK</button>
+            <div class="logo-center-zone">
+                <h1 class="main-logo-text">ANIME SCOPE USER</h1>
+            </div>
+        </div>
+
+        <div class="identity-grid">
+            <div class="user-meta">
+                <h1 id="display-username" class="gold-text">SUMMONING...</h1>
+                <div class="meta-details">
+                    <p class="meta-item-large">📧 GMAIL: <span id="display-gmail" class="platinum-text">---</span></p>
+                    <p class="meta-item-large">🗓️ JOINED IN ANIME SCOPE : <span id="display-join-date" class="platinum-text">---</span></p>
+                </div>
+            </div>
+            <div class="badge-display">
+                <div class="badge-slot">
+                    <span class="badge-label">PATH OF SORCERER(JOURNEY)</span>
+                    <div id="sorcerer-badge" class="active-badge">ROOKIE</div>
+                </div>
+                <div class="badge-slot">
+                    <span class="badge-label">CHRONOS ARCHIVE(TIME)</span>
+                    <div id="chronos-badge" class="active-badge">NEOPHYTE</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="security-hub" style="display: flex; justify-content: center; text-align: center;">
+    <div class="trust-content">
+        <div class="contact-header" style="margin-bottom: 10px;">
+            <span class="info-tag">CONTACT :</span>
+            <a href="mailto:supportanimescope@gmail.com" class="ultra-email">supportanimescope@gmail.com</a>
+        </div>
+        <p class="community-note">FORGED FOR THE GLOBAL ANIME COMMUNITY</p>
+        <p class="footer-small">© 2026 ANIMESCOPE | ULTRA EDITION</p>
+    </div>
+</div>
+            <div id="pass-change-form" class="hidden-form">
+                <input type="password" id="old-pass" placeholder="ENTER CURRENT SEAL">
+                <input type="password" id="new-pass" placeholder="ENTER NEW SEAL">
+                <button class="update-confirm-btn" onclick="handlePasswordUpdate()">UPDATE SEAL</button>
+            </div>
+        </div>
+
+    </div> <div class="profile-section">
+        <h2 class="section-title">
+            <span id="complete-head">✔ COMPLETED</span>
+            <button class="clear-profile-btn" onclick="clearList('completed')">CLEAR ALL</button>
+        </h2>
+        <div id="completed-list" class="profile-grid"></div>
+    </div>
+
+<div class="profile-section">
+    <h2 class="section-title">
+        <span id="fav-head">❤️ FAVOURITES</span>
+        <button class="clear-profile-btn" onclick="clearList('favorites')">CLEAR ALL</button>
+    </h2>
+    <div id="favorites-list" class="profile-grid"></div>
+</div>
+
+<div class="profile-section">
+    <h2 class="section-title">
+        <span id="watch-head">🔖 WATCH LATER</span>
+        <button class="clear-profile-btn" onclick="clearList('watchlist')">CLEAR ALL</button>
+    </h2>
+    <div id="watchlist-list" class="profile-grid"></div>
+</div>
+
+<script src="badges.js"></script>
+
+<script>
+     
+if (localStorage.getItem("animeTheme") === "light") document.body.classList.add("light-theme");
+
+const user = localStorage.getItem("currentUser");
+
+     
+
+
+     
+const favKey = "favorites_" + user;
+const watchKey = "watchlist_" + user;
+const completeKey = "completed_" + user;
+
+     
+let favorites = JSON.parse(localStorage.getItem(favKey)) || [];
+let watchLater = JSON.parse(localStorage.getItem(watchKey)) || [];
+let completed = JSON.parse(localStorage.getItem(completeKey)) || [];
+
+     
+// --- DATABASE IDENTITY FETCH ---
+async function loadIdentity() {
+    try {
+        // Fetch everything directly from the mainframe!
+        const res = await fetch(`http://localhost:5000/api/users/data/${user}`);
+        if (!res.ok) throw new Error("Failed to summon data");
+
+        const data = await res.json();
+
+        // 1. Update Username (Gold Text)
+        document.getElementById("display-username").innerText = user.toUpperCase();
+
+        // 2. Update Gmail (Platinum Text)
+        document.getElementById("display-gmail").innerText = data.email || "UNKNOWN@GMAIL.COM";
+
+        // 3. Update Join Date using Mongoose's 'createdAt' timestamp
+        const date = new Date(data.createdAt);
+        document.getElementById("display-join-date").innerText = date.toLocaleDateString('en-GB', {
+            day: 'numeric', month: 'long', year: 'numeric'
+        });
+
+        // Trigger Badges using the real join date from the cloud
+        updateBadges(data.createdAt);
+
+    } catch (error) {
+        console.error("Identity Error:", error);
+        document.getElementById("display-username").innerText = user.toUpperCase();
+        document.getElementById("display-gmail").innerText = "CONNECTION LOST";
+        document.getElementById("display-join-date").innerText = "---";
+    }
+}
+
+// Update this function to accept the real cloud date
+function updateBadges(joinDateString) {
+    const joinDate = new Date(joinDateString);
+    const now = new Date();
+    const monthsJoined = (now.getFullYear() - joinDate.getFullYear()) * 12 + (now.getMonth() - joinDate.getMonth());
+
+    const sBadge = getEarnedBadge('pathOfSorcerer', completed.length);
+    const cBadge = getEarnedBadge('chronosArchive', monthsJoined);
+
+    const sEl = document.getElementById("sorcerer-badge");
+    const cEl = document.getElementById("chronos-badge");
+
+    if(sBadge && sEl) {
+        sEl.innerText = sBadge.name.toUpperCase();      
+        sEl.style.color = sBadge.color;
+        sEl.style.borderColor = sBadge.color;
+        sEl.className = "active-badge " + sBadge.aura;
+        sEl.style.boxShadow = `0 0 15px ${sBadge.color}44`;      
+    }
+    if(cBadge && cEl) {
+        cEl.innerText = cBadge.name.toUpperCase();      
+        cEl.style.color = cBadge.color;
+        cEl.style.borderColor = cBadge.color;
+        cEl.className = "active-badge " + cBadge.aura;
+        cEl.style.boxShadow = `0 0 15px ${cBadge.color}44`;      
+    }
+}
+
+     
+async function loadList(items, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    
+    if(containerId === "favorites-list") document.getElementById("fav-head").innerText = `❤️ FAVOURITES (${items.length})`;
+    if(containerId === "watchlist-list") document.getElementById("watch-head").innerText = `🔖 WATCH LATER (${items.length})`;
+    if(containerId === "completed-list") document.getElementById("complete-head").innerText = `✔ COMPLETED (${items.length})`;
+
+    if (!items || items.length === 0) {
+        container.innerHTML = `<p class="empty-msg">Nothing here yet...</p>`;
+        return;
+    }
+
+    for (let item of items) {
+        let data = (typeof item === 'object' && item !== null) ? item : null;
+        if (!data) {
+            try {
+                const res = await fetch(`https://api.jikan.moe/v4/anime/${item}`);
+                const json = await res.json();
+                data = json.data;
+            } catch (e) { continue; }
+        }
+        if (!data) continue;
+
+        
+        let auraClass = "rating-low";      
+        const score = data.score || 0;
+        if (score >= 8) auraClass = "rating-best";
+        else if (score >= 5.0) auraClass = "rating-good";
+
+        const card = document.createElement("div");
+        card.className = "anime-card";
+        
+        let actionButtons = "";
+        if (containerId === "completed-list") {
+            actionButtons = `<span class="action-btn complete-active" onclick="removeCompleted(${data.mal_id})">✔</span>`;
+        } else if (containerId === "favorites-list") {
+            actionButtons = `
+                <span class="action-btn remove-action" onclick="removeFavorite(${data.mal_id})">❤️</span>
+                <span class="action-btn add-action" onclick="favToWatch(${data.mal_id})">🔖</span>`;
+        } else {
+            actionButtons = `
+                <span class="action-btn add-action" onclick="watchToFav(${data.mal_id})">❤️</span>
+                <span class="action-btn remove-action" onclick="removeWatch(${data.mal_id})">🔖</span>`;
+        }
+
+      card.innerHTML = `
+            <div class="card-actions">${actionButtons}</div>
+            <a href="anime.html?id=${data.mal_id}" style="text-decoration:none;color:inherit">
+                <img src="${data.images.jpg.image_url}" loading="lazy">
+                <div class="quick-look">
+                    <p>Type: ${data.type}</p>
+                    <p>Eps: ${data.episodes}</p>
+                </div>
+                <h3 style="font-size:11px;padding:10px 10px 0;height:35px;overflow:hidden; margin-bottom: 40px;">
+                    ${data.title_english || data.title}
+                </h3>
+                <div class="rating ${auraClass}">⭐ ${data.score || 'N/A'}</div>
+            </a>`;
+        container.appendChild(card);
+    }
+}
+     
+function refreshUI() {
+         
+    loadIdentity(); 
+
+         
+    loadList(completed, "completed-list");
+    loadList(favorites, "favorites-list");
+    loadList(watchLater, "watchlist-list");
+}
+const savedPos = sessionStorage.getItem("profileScrollPos");
+    if (savedPos) {
+        window.scrollTo({ top: parseInt(savedPos), behavior: 'instant' });
+        sessionStorage.removeItem("profileScrollPos");
+    }
+     
+// REMOVE FROM FAVOURITES
+async function removeFavorite(id) {
+    try {
+        await fetch('http://localhost:5000/api/users/toggle-list', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: user,
+                listType: 'favourites',
+                anime: { mal_id: id }, // Send the ID so the backend can pull it
+                action: 'remove'
+            })
+        });
+    } catch (e) { console.error("DB Sync Failed", e); }
+
+    favorites = favorites.filter(i => (i.mal_id || i) !== id);
+    localStorage.setItem(favKey, JSON.stringify(favorites));
+    refreshUI();
+}
+
+// REMOVE FROM WATCH LATER
+async function removeWatch(id) {
+    try {
+        await fetch('http://localhost:5000/api/users/toggle-list', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: user,
+                listType: 'watchLater',
+                anime: { mal_id: id },
+                action: 'remove'
+            })
+        });
+    } catch (e) { console.error("DB Sync Failed", e); }
+
+    watchLater = watchLater.filter(i => (i.mal_id || i) !== id);
+    localStorage.setItem(watchKey, JSON.stringify(watchLater));
+    refreshUI();
+}
+
+// REMOVE FROM COMPLETED
+async function removeCompleted(id) {
+    try {
+        await fetch('http://localhost:5000/api/users/toggle-list', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: user,
+                listType: 'completed',
+                anime: { mal_id: id },
+                action: 'remove'
+            })
+        });
+    } catch (e) { console.error("DB Sync Failed", e); }
+
+    completed = completed.filter(i => (i.mal_id || i) !== id);
+    localStorage.setItem(completeKey, JSON.stringify(completed));
+    refreshUI();
+}
+
+// SYNC: Move a Favourite to Watch Later
+async function favToWatch(id) {
+    const item = favorites.find(i => (i.mal_id || i) === id);
+    if (item && !watchLater.some(w => (w.mal_id || w) === id)) {
+        // --- MAINFRAME SYNC: Add to Watch Later ---
+        try {
+            await fetch('http://localhost:5000/api/users/toggle-list', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: user,
+                    listType: 'watchLater',
+                    anime: item,
+                    action: 'add'
+                })
+            });
+            console.log("MAINFRAME: Anime added to Watch Later.");
+        } catch (e) {
+            console.error("Database sync failed:", e);
+        }
+
+        // Local Update
+        watchLater.push(item);
+        localStorage.setItem(watchKey, JSON.stringify(watchLater));
+        refreshUI();
+    }
+}
+
+// SYNC: Move a Watch Later to Favourites
+async function watchToFav(id) {
+    const item = watchLater.find(i => (i.mal_id || i) === id);
+    if (item && !favorites.some(f => (f.mal_id || f) === id)) {
+        // --- MAINFRAME SYNC: Add to Favourites ---
+        try {
+            await fetch('http://localhost:5000/api/users/toggle-list', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: user,
+                    listType: 'favourites',
+                    anime: item,
+                    action: 'add'
+                })
+            });
+            console.log("MAINFRAME: Anime added to Favourites.");
+        } catch (e) {
+            console.error("Database sync failed:", e);
+        }
+
+        // Local Update
+        favorites.push(item);
+        localStorage.setItem(favKey, JSON.stringify(favorites));
+        refreshUI();
+    }
+}
+
+async function clearList(listType) {
+    const user = localStorage.getItem("currentUser");
+    if (!user) return;
+
+    // 1. MAP UI NAMES TO DATABASE NAMES
+    // This is the fix! UI 'favorites' -> DB 'favourites' | UI 'watchlist' -> DB 'watchLater'
+    let dbListType = listType;
+    if (listType === 'favorites') dbListType = 'favourites';
+    if (listType === 'watchlist') dbListType = 'watchLater';
+
+    if (confirm(`ARE YOU SURE? This will permanently wipe your ${listType} list from the cloud.`)) {
+        try {
+            // 2. TELL THE BACKEND TO NUKE THE LIST
+            const response = await fetch('http://localhost:5000/api/users/clear-list', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username: user, 
+                    listType: dbListType 
+                })
+            });
+
+            if (!response.ok) throw new Error("Failed to clear database");
+            
+            console.log(`MAINFRAME: ${dbListType} wiped successfully.`);
+
+            // 3. WIPE LOCAL STORAGE AND UPDATE UI
+            if (listType === 'completed') { 
+                localStorage.removeItem(completeKey); 
+                completed = []; 
+            } else if (listType === 'favorites') { 
+                localStorage.removeItem(favKey); 
+                favorites = []; 
+            } else if (listType === 'watchlist') { 
+                localStorage.removeItem(watchKey); 
+                watchLater = []; 
+            }
+
+            refreshUI(); // Re-renders the list as empty
+            
+        } catch (e) {
+            console.error("DB Wipe Failed:", e);
+            alert("PORTAL ERROR: Could not clear the cloud database.");
+        }
+    }
+}
+
+if (localStorage.getItem("animeTheme") === "light") {
+    document.body.classList.add("light-theme");
+} else {
+    document.body.classList.remove("light-theme");
+}
+
+     
+refreshUI();
+</script>
+</body>
+</html>

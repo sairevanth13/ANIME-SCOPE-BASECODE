@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Scope | Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .details-wrapper { max-width: 1000px; margin: 40px auto; padding: 30px; background: var(--card-bg); border-radius: 20px; border: 1px solid rgba(255, 76, 96, 0.2); box-shadow: 0 0 30px var(--shadow); }
+        .back-link { display: inline-block; margin-bottom: 20px; color: var(--accent); text-decoration: none; font-weight: bold; font-family: 'Orbitron', sans-serif; cursor: pointer;}
+        .details-header { display: flex; gap: 40px; flex-wrap: wrap; }
+        .details-header img { width: 300px; border-radius: 15px; border: 2px solid var(--accent); box-shadow: 0 0 20px rgba(255, 76, 96, 0.3); }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px; border: 2px solid var(--accent); margin-top: 20px; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .genre-tag { border: 1px solid var(--accent); padding: 4px 12px; border-radius: 20px; font-size: 12px; margin: 4px; display: inline-block; color: var(--text); }
+       .copy-link-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 76, 96, 0.1);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: 0.3s ease;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(255, 76, 96, 0.2);
+}
+
+.copy-link-btn:hover {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 0 20px var(--accent);
+    transform: scale(1.1);
+}
+
+
+.copy-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-family: 'Orbitron';
+    font-size: 12px;
+    z-index: 10000;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { bottom: -50px; opacity: 0; }
+    to { bottom: 30px; opacity: 1; }
+}
+
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+}
+.star-rating input { display: none; }
+.star-rating label {
+    font-size: 30px;
+    color: #2a2a2a;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent);
+}
+
+
+.rating-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+    text-align: center;
+}
+.stat-box {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 76, 96, 0.1);
+}
+.stat-val { font-family: 'Orbitron'; font-size: 20px; color: var(--accent); }
+
+ 
+.comment-card {
+    background: rgba(22, 27, 46, 0.6);
+    border-left: 4px solid var(--accent);
+    padding: 15px;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 15px;
+}
+.comment-user { font-family: 'Orbitron'; font-size: 12px; color: var(--legend); margin-bottom: 5px; }
+
+
+ 
+.aura-legendary-gold {
+    border: 1px solid #ffd700 !important;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    background: rgba(255, 215, 0, 0.05) !important;
+}
+
+.aura-legendary-blue {
+    border: 1px solid #00d2ff !important;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+    background: rgba(0, 210, 255, 0.05) !important;
+}
+
+.aura-hater-red {
+    border: 1px solid #ff4c60 !important;
+    animation: pulseRed 2s infinite;
+    background: rgba(255, 76, 96, 0.05) !important;
+}
+
+@keyframes pulseRed {
+    0% { box-shadow: 0 0 0px rgba(255, 76, 96, 0); }
+    50% { box-shadow: 0 0 20px rgba(255, 76, 96, 0.5); }
+    100% { box-shadow: 0 0 0px rgba(255, 76, 96, 0); }
+}
+
+.badge {
+    font-family: 'Orbitron';
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+    text-transform: uppercase;
+}
+    
+.light-theme #comment-input {
+    background: rgba(0, 0, 0, 0.05) !important;  
+    border: 1px solid var(--accent) !important;  
+    color: #333 !important;  
+}
+
+.light-theme #comment-input::placeholder {
+    color: #888 !important;  
+}
+   </style>
+</head>
+<body>
+    <div style="padding: 20px 5%;">
+        <a href="#" onclick="history.back(); return false;" class="back-link">← RETURN TO SCOPE</a>
+       <div id="anime-details">
+    <div style="text-align:center; margin-top:80px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+        <h2 style="font-family:'Orbitron'; color:var(--accent); letter-spacing: 5px; text-shadow: 0 0 10px var(--accent); animation: pulseGlow 1.5s infinite alternate;">
+            SUMMONING DATA...
+        </h2>
+        
+        <div class="loader-container" style="position: static; display: block;">
+            <div class="spinner" style="width: 40px; height: 40px; border-width: 4px;"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+     
+    @keyframes pulseGlow {
+        from { opacity: 0.6; transform: scale(0.98); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .comment-user {
+    font-family: 'Poppins', sans-serif !important;  
+    text-transform: none !important;               
+}
+</style>
+    <script>
+         
+        if (localStorage.getItem("animeTheme") === "light") document.body.classList.add("light-theme");
+        
+        const id = new URLSearchParams(window.location.search).get("id");
+
+       async function fetchInfo() {
+    try {
+        const res = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`);
+        const {data} = await res.json();
+        
+         
+        const trailerHTML = data.trailer?.embed_url 
+            ? `<div class="video-container"><iframe src="${data.trailer.embed_url}" allowfullscreen></iframe></div>` 
+            : "<p style='color:gray;'>No official trailer found in the mainframe.</p>";
+        
+         
+        document.getElementById("anime-details").innerHTML = `
+            <div class="details-wrapper" style="position: relative;">
+                <div class="copy-link-btn" onclick="copyAnimeLink()" title="Copy Link to Share">
+                    🔗
+                </div>
+                <div class="details-header">
+                    <img src="${data.images.jpg.large_image_url}">
+                    <div style="flex:1; min-width:300px;">
+                        <h1 style="font-family:'Orbitron'; color:var(--accent); font-size:2.5rem; margin-bottom:10px;">
+                            ${data.title_english || data.title}
+                        </h1>
+                        <p style="font-size:1.2rem; margin-bottom:20px;">
+                            ⭐ Rating: <span style="color:var(--gold); font-weight:bold;">${data.score || 'N/A'}</span> | Episodes: ${data.episodes || 'Ongoing'}
+                        </p>
+                        <p><b>Status:</b> ${data.status}</p>
+                        <p><b>Aired:</b> ${data.aired.string}</p>
+                        <div style="margin-top:15px;">
+                            ${data.genres.map(g => `<span class="genre-tag">${g.name}</span>`).join("")}
+                        </div>
+                    </div>
+                </div>
+
+                <h2 style="font-family:'Orbitron'; color:var(--accent); margin-top:40px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">SYNOPSIS</h2>
+                <p style="line-height:1.8; color:var(--text); font-size:15px; text-align:justify;">
+                    ${data.synopsis || 'No description provided.'}
+                </p>
+
+                <h2 style="font-family:'Orbitron'; color:var(--accent); margin-top:40px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">RATINGS</h2>
+                <div class="rating-stats">
+                    <div class="stat-box"><div>GLOBAL</div><div class="stat-val" id="api-score">${data.score || 'N/A'}</div></div>
+                    <div class="stat-box"><div>USERS AVG</div><div class="stat-val" id="user-avg">0.0</div></div>
+                    <div class="stat-box"><div>TOTAL AVG</div><div class="stat-val" id="total-avg">0.0</div></div>
+                </div>
+
+                <div class="star-rating" id="user-star-input">
+                    ${[10,9,8,7,6,5,4,3,2,1].map(num => `
+                        <input type="radio" id="star${num}" name="rating" value="${num}" onclick="submitRating(${num})">
+                        <label for="star${num}">★</label>
+                    `).join("")}
+                </div>
+
+                <h2 style="font-family:'Orbitron'; color:var(--accent); margin-top:40px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">COMMENTS</h2>
+                <div style="margin-bottom:30px;">
+                
+<textarea id="comment-input" placeholder="Type your review..." style="width:100%; height:80px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.2); border-radius:10px; color:var(--text); padding:10px; outline:none; font-family:'Poppins';"></textarea>
+                    <button onclick="submitComment()" class="teleport-btn" style="margin-top:10px; width:100%;">POST COMMENT</button>
+                </div>
+                <div id="comments-container"></div>
+                
+                <h2 style="font-family:'Orbitron'; color:var(--accent); margin-top:40px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">OFFICIAL TRAILER</h2>
+                ${trailerHTML}
+            </div>`;
+         
+
+        loadFeedback(data.score);
+    } catch (e) { 
+        document.getElementById("anime-details").innerHTML = "<h2 style='text-align:center;'>ERROR: Database Link Severed.</h2>"; 
+    }
+}
+        fetchInfo();
+
+
+         function copyAnimeLink() {
+     
+    const shareUrl = window.location.href;
+
+    navigator.clipboard.writeText(shareUrl).then(() => {
+         
+        const toast = document.createElement("div");
+        toast.className = "copy-toast";
+        toast.innerText = " LINK COPIED!";
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            setTimeout(() => toast.remove(), 500);
+        }, 2000);
+    });
+}  
+
+function loadFeedback(apiScore) {
+    const animeId = new URLSearchParams(window.location.search).get("id");
+    let fb = JSON.parse(localStorage.getItem(`fb_${animeId}`)) || { ratings: {}, comments: [] };
+    
+    
+    if (Array.isArray(fb.ratings)) { fb.ratings = {}; }
+
+    const currentUser = localStorage.getItem("currentUser");
+    const userAvgElement = document.getElementById("user-avg");
+    const totalAvgElement = document.getElementById("total-avg");
+    const apiParsed = parseFloat(apiScore) || 0;
+
+     
+    const ratingValues = Object.values(fb.ratings); 
+    const denominator = ratingValues.length;
+    let userAvg = 0;
+    
+    if (denominator > 0) {
+        const userSum = ratingValues.reduce((a, b) => a + b, 0);
+        userAvg = (userSum / denominator).toFixed(1); 
+        userAvgElement.innerText = userAvg;
+        const totalAvg = ((apiParsed + parseFloat(userAvg)) / 2).toFixed(2);
+        totalAvgElement.innerText = totalAvg;
+    } else {
+        userAvgElement.innerText = "0";
+        totalAvgElement.innerText = apiParsed.toFixed(2);
+    }
+
+     
+    const starContainer = document.getElementById("user-star-input");
+    let status = document.getElementById("voted-status");
+
+    
+document.querySelectorAll('input[name="rating"]').forEach(i => i.checked = false);
+
+if (status) status.remove(); 
+    if (currentUser && fb.ratings[currentUser]) {
+        const currentScore = fb.ratings[currentUser];
+        document.getElementById(`star${currentScore}`).checked = true; 
+        if (!status) {
+            status = document.createElement("p");
+            status.id = "voted-status";
+            status.style = "color:var(--accent); font-size:11px; margin-top:5px; font-family:'Orbitron';";
+            starContainer.after(status);
+        }
+        status.innerHTML = `RATED: ${currentScore}/10 <span onclick="removeRating()" style="color:gray; cursor:pointer; margin-left:10px; border-bottom:1px solid gray;">REMOVE ✕</span>`;
+    } else {
+        document.querySelectorAll('input[name="rating"]').forEach(i => i.checked = false);
+        if (status) status.remove();
+    }
+
+     
+    const container = document.getElementById("comments-container");
+    container.innerHTML = fb.comments.length ? fb.comments.map((c, index) => {
+        
+        const score = fb.ratings[c.user] || 0;
+        let auraClass = "";
+        let badgeText = "";
+        let badgeColor = "";
+
+         
+        if (score >= 8) {
+            auraClass = "aura-legendary-gold";
+            badgeText = "LEGENDARY";
+            badgeColor = "#ffd700";
+        } else if (score >= 4) {
+            auraClass = "aura-legendary-blue";
+            badgeText = "ELITE";  
+            badgeColor = "#00d2ff";
+        } else if (score >= 1) {
+            auraClass = "aura-hater-red";
+            badgeText = "HATER";
+            badgeColor = "#ff4c60";
+        }
+
+        return `
+            <div class="comment-card ${auraClass}" style="margin-bottom:15px; padding:15px; border-radius:10px; background:rgba(255,255,255,0.02); transition: 0.3s;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                 <div class="comment-user" style="font-family:'Poppins'; font-size:12px;">
+    ${badgeText ? `<span class="badge" style="border:1px solid ${badgeColor}; color:${badgeColor}">${badgeText}</span>` : ''}
+    
+    ${c.user} <span style="color:var(--gold); margin-left:10px;">${score > 0 ? '⭐ '+score+'/10' : ''}</span>
+</div>
+                    ${c.user === currentUser ? `<span onclick="deleteComment(${index})" style="color:var(--accent); cursor:pointer;">✕</span>` : ''}
+                </div>
+                <div class="comment-text" style="margin-top:10px; color:var(--text); line-height:1.5;">${c.text}</div>
+            </div>
+        `;
+    }).join("") : `<p style="color:gray;">No cursed energy detected...</p>`;
+}
+async function submitRating(val) {
+    const user = localStorage.getItem("currentUser");
+    if (!user) {
+        alert("LOGIN REQUIRED! Guests cannot influence the Battle Ratings.");
+        return;
+    }
+    
+    const animeId = new URLSearchParams(window.location.search).get("id");
+
+    // --- NEW: SYNC TO MONGODB BACKEND ---
+    try {
+        await fetch('http://localhost:5000/api/users/submit-rating', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, animeId: String(animeId), score: Number(val) })
+        });
+        console.log(`Rating accepted by Mainframe: ${val} for user ${user}`);
+    } catch (error) {
+        console.error("Failed to save rating to DB:", error);
+    }
+    // ------------------------------------
+
+    // Keep existing UI logic to make the stars update instantly on screen
+    let fb = JSON.parse(localStorage.getItem(`fb_${animeId}`)) || { ratings: {}, comments: [] };
+    if (Array.isArray(fb.ratings)) { fb.ratings = {}; }
+    
+    fb.ratings[user] = parseInt(val);
+    localStorage.setItem(`fb_${animeId}`, JSON.stringify(fb));
+    
+    const apiScoreElement = document.getElementById("api-score");
+    const apiScore = apiScoreElement ? apiScoreElement.innerText : "0";
+    loadFeedback(apiScore);
+}
+async function removeRating() {
+    const user = localStorage.getItem("currentUser");
+    const animeId = new URLSearchParams(window.location.search).get("id");
+
+    if (confirm("Remove your rating from the records?")) {
+        // 1. SYNC TO DATABASE: Purge the rating
+        try {
+            await fetch('http://localhost:5000/api/users/remove-rating', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: user, animeId: String(animeId) })
+            });
+            console.log("Mainframe: Rating record destroyed.");
+        } catch (error) {
+            console.error("Failed to sync removal:", error);
+        }
+
+        // 2. Local Update (Keep your existing UI logic)
+        let fb = JSON.parse(localStorage.getItem(`fb_${animeId}`));
+        delete fb.ratings[user]; 
+        localStorage.setItem(`fb_${animeId}`, JSON.stringify(fb));
+        
+        const apiScore = document.getElementById("api-score").innerText;
+        loadFeedback(apiScore);
+    }
+}
+
+async function submitComment() {
+    const user = localStorage.getItem("currentUser");
+    const text = document.getElementById("comment-input").value;
+
+    if (!user) {
+        alert("SUMMONING FAILED: You must be logged in to leave a cursed comment!");
+        return;
+    }
+
+    if (!text.trim()) {
+        alert("Write something first! Don't leave the scroll empty.");
+        return;
+    }
+
+    const animeId = new URLSearchParams(window.location.search).get("id");
+
+    // --- NEW: SYNC TO MONGODB BACKEND ---
+    try {
+        await fetch('http://localhost:5000/api/users/add-comment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, animeId: String(animeId), text: text })
+        });
+        console.log("Comment anchored to the database.");
+    } catch (error) {
+        console.error("Failed to save comment to DB:", error);
+    }
+    // ------------------------------------
+
+    // Keep existing UI logic to display the comment immediately
+    let fb = JSON.parse(localStorage.getItem(`fb_${animeId}`)) || { ratings: {}, comments: [] };
+    
+    const newComment = {
+        user: user,
+        text: text,
+        date: new Date().toLocaleDateString()
+    };
+    
+    fb.comments.unshift(newComment);
+    localStorage.setItem(`fb_${animeId}`, JSON.stringify(fb));
+     
+    const apiScore = document.getElementById("api-score").innerText;
+    loadFeedback(apiScore);
+
+    document.getElementById("comment-input").value = "";
+}
+async function deleteComment(index) {
+    const user = localStorage.getItem("currentUser");
+    const animeId = new URLSearchParams(window.location.search).get("id");
+    let fb = JSON.parse(localStorage.getItem(`fb_${animeId}`));
+
+    // Grab the specific comment data before we delete it locally
+    const commentToDelete = fb.comments[index];
+
+    if (confirm("Delete this comment?")) {
+        // 1. SYNC TO DATABASE: Erase the comment
+        try {
+            await fetch('http://localhost:5000/api/users/remove-comment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username: user, 
+                    animeId: String(animeId), 
+                    text: commentToDelete.text 
+                })
+            });
+            console.log("Mainframe: Comment successfully erased.");
+        } catch (error) {
+            console.error("Failed to sync removal:", error);
+        }
+
+        // 2. Local Update (Keep your existing UI logic)
+        fb.comments.splice(index, 1);
+        localStorage.setItem(`fb_${animeId}`, JSON.stringify(fb));
+        loadFeedback(document.getElementById("api-score").innerText);
+    }
+}
+    </script>
+</body>
+</html>

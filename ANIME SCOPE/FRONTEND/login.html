@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Anime Scope | Auth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* YOUR EXACT CSS - ZERO CHANGES */
+        .auth-box { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images7.alphacoders.com/611/611138.png'); background-size: cover; }
+        .card { width: 350px; padding: 40px; background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid var(--accent); text-align: center; transition: transform 0.3s, background 0.3s; }
+        .field { margin-bottom: 20px; text-align: left; }
+        .field label { display: block; font-size: 11px; color: var(--accent); font-family: 'Orbitron'; margin-bottom: 5px; }
+        .field input { width: 100%; padding: 12px; background: rgba(128, 128, 128, 0.1); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 10px; color: var(--text); outline: none; box-sizing: border-box; font-family: 'Poppins'; transition: 0.3s; }
+        .btn { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 10px; font-family: 'Orbitron'; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn:active { transform: scale(0.98); filter: hue-rotate(90deg); box-shadow: 0 0 20px var(--accent); }
+        #auth-footer { margin-top:20px; font-size:13px; color: var(--text); opacity: 0.8; font-family:'Poppins'; }
+        #auth-footer span { color:var(--accent); cursor:pointer; font-weight:bold; text-transform: uppercase; letter-spacing: 1px; }
+        .back-btn { position: absolute; top: 25px; left: 25px; background: rgba(22, 27, 46, 0.7); color: var(--text); border: 1px solid var(--accent); padding: 10px 20px; border-radius: 12px; font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 1px; cursor: pointer; transition: 0.3s; backdrop-filter: blur(8px); z-index: 100; }
+        .back-btn:hover { background: var(--accent); color: white; box-shadow: 0 0 20px var(--accent); transform: translateX(-5px); }
+        body.light-theme .back-btn { background: rgba(255, 255, 255, 0.9); border-color: var(--accent); color: #0b0f1a; }
+        .valid-aura { border-color: #39ff14 !important; box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); background: rgba(57, 255, 20, 0.05) !important; }
+        .invalid-aura { border-color: #ff4c60 !important; box-shadow: 0 0 10px rgba(255, 76, 96, 0.3); background: rgba(255, 76, 96, 0.05) !important; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); } 20%, 40%, 60%, 80% { transform: translateX(10px); } }
+        .shake-error { animation: shake 0.5s both; border-color: #ff4c60 !important; }
+        #pass-hint { font-size: 10px; color: #555; margin-top: 5px; font-family: 'Poppins'; display: none; }
+        input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active  { -webkit-text-fill-color: var(--text) !important; -webkit-box-shadow: 0 0 0px 1000px var(--card-bg) inset !important; transition: background-color 5000s ease-in-out 0s; }
+        .field input:focus { background: rgba(128, 128, 128, 0.15) !important; outline: none; color: var(--text) !important; }
+        body.light-theme .field input { background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="auth-box">
+    
+    <button class="back-btn" onclick="history.back()">❮ Back</button>
+
+    <div class="card">
+        <h2 id="title" style="color:var(--accent); font-family:'Orbitron'; margin-bottom: 30px;">Login</h2>
+        
+        <div id="auth-container">
+            <form id="authForm">
+                <div id="user-field" class="field" style="display:none;">
+                    <label>Choose Username (Case-Sensitive)</label>
+                    <input type="text" id="user" placeholder="e.g. Gojo_Satoru">
+                </div>
+
+                <div class="field">
+                    <label id="main-label">Username or Gmail</label>
+                    <input type="text" id="main-input" required placeholder="Enter credentials">
+                </div>
+
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="pass" required placeholder="••••••••">
+                    <div id="pass-hint">Rule: 8+ chars, 1 Uppercase, 1 Number, 1 Symbol.</div>
+                    <small id="login-note" style="color: #555; font-size: 9px; margin-top: 5px; display: block;">*Credentials are case-sensitive</small>
+                </div>
+
+                <button type="submit" class="btn" id="btn-text">Authorize</button>
+            </form>
+
+            <p id="auth-footer">
+                Don't have an account? <span onclick="toggle()">Register</span>
+            </p>
+        </div>
+
+        <div id="otp-container" style="display:none;">
+            <p id="otp-success-msg" style="color: #39ff14; font-family: 'Poppins'; font-size: 12px; margin-bottom: 20px; font-weight: bold;"></p>
+            
+            <form id="otpForm">
+                <div class="field">
+                    <label style="color: #00d4ff; text-shadow: 0 0 5px #00d4ff;">Verification Code</label>
+                    <input type="text" id="otp-input" placeholder="Enter 6-Digit Code" required>
+                </div>
+                <button type="submit" class="btn">Confirm Code</button>
+            </form>
+            
+            <p style="margin-top:20px; font-size:13px; color:gray; font-family:'Poppins';">
+                Didn't get code? <span style="color:var(--accent); cursor:pointer; font-weight:bold; text-transform: uppercase;" onclick="location.reload()">Restart</span>
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        let isLog = true;
+
+        if (localStorage.getItem("animeTheme") === "light") {
+            document.body.classList.add("light-theme");
+        }
+
+        function triggerShake() {
+            const card = document.querySelector('.card');
+            card.classList.add('shake-error');
+            setTimeout(() => card.classList.remove('shake-error'), 500);
+        }
+
+        function applyAura(element, isValid) {
+            if (isValid) {
+                element.classList.add('valid-aura');
+                element.classList.remove('invalid-aura');
+            } else {
+                element.classList.add('invalid-aura');
+                element.classList.remove('valid-aura');
+            }
+        }
+
+        async function apiRequest(endpoint, body) {
+            try {
+                const res = await fetch(`http://localhost:5000/api/auth${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                return await res.json();
+            } catch (err) {
+                return { msg: "CONNECTION FAILED: Backend is offline." };
+            }
+        }
+
+        function toggle() {
+            isLog = !isLog;
+            document.getElementById('user-field').style.display = isLog ? "none" : "block";
+            document.getElementById('title').innerText = isLog ? "Login" : "Sign Up";
+            document.getElementById('btn-text').innerText = isLog ? "Authorize" : "Register";
+            document.getElementById('pass-hint').style.display = isLog ? "none" : "block";
+            document.getElementById('login-note').style.display = isLog ? "block" : "none";
+
+            const mainInput = document.getElementById('main-input');
+            const passInput = document.getElementById('pass');
+            const userInput = document.getElementById('user');
+
+            [mainInput, passInput, userInput].forEach(el => el.classList.remove('valid-aura', 'invalid-aura'));
+
+            if (isLog) {
+                document.getElementById('main-label').innerText = "Username or Gmail";
+                mainInput.placeholder = "Enter credentials";
+                document.getElementById('auth-footer').innerHTML = `Don't have an account? <span onclick="toggle()">Register</span>`;
+            } else {
+                document.getElementById('main-label').innerText = "Gmail Address";
+                mainInput.placeholder = "Enter your email";
+                document.getElementById('auth-footer').innerHTML = `Already have an account? <span onclick="toggle()">Login</span>`;
+            }
+        }
+
+        document.getElementById('pass').oninput = function() {
+            if (!isLog) {
+                const val = this.value;
+                const isStrong = val.length >= 8 && /[A-Z]/.test(val) && /[a-z]/.test(val) && /[0-9]/.test(val) && /[!@#$%^&*(),.?":{}|<>]/.test(val);
+                applyAura(this, isStrong);
+                document.getElementById('pass-hint').style.color = isStrong ? "#39ff14" : "#ff4c60";
+                document.getElementById('pass-hint').innerText = isStrong ? "Seal Strength: LEGENDARY" : "Seal Strength: WEAK";
+            }
+        };
+
+        document.getElementById('main-input').oninput = function() {
+            if (!isLog) {
+                this.value = this.value.toLowerCase();
+                applyAura(this, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value));
+            }
+        };
+
+        document.getElementById('user').oninput = function() {
+            if (!isLog) {
+                applyAura(this, this.value.trim().length >= 3);
+            }
+        };
+
+        // --- SUBMITTING LOGIN OR SIGNUP ---
+        document.getElementById('authForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const mainInput = document.getElementById('main-input').value.trim();
+            const passInput = document.getElementById('pass').value.trim();
+            const userInput = document.getElementById('user').value.trim();
+
+           if (isLog) {
+                // THE UPGRADE: Smart scanner checks if they typed an email or a codename
+                const payload = mainInput.includes('@') 
+                    ? { email: mainInput.toLowerCase(), password: passInput } 
+                    : { username: mainInput, password: passInput };
+
+                const data = await apiRequest('/login', payload);         
+                if (data.token) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("currentUser", data.user.username);
+                    window.location.href = "index.html";
+                } else {
+                    triggerShake();
+                    alert(data.msg || "ACCESS DENIED: INVALID CREDENTIALS");
+                }
+            } else {
+                const smallEmail = mainInput.toLowerCase();
+
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+                if (!emailPattern.test(smallEmail)) {
+                    triggerShake();
+                    return alert("INVALID GMAIL: Please enter a full address.");
+                }
+
+                const isStrong = passInput.length >= 8 && /[A-Z]/.test(passInput) && /[a-z]/.test(passInput) && /[0-9]/.test(passInput) && /[!@#$%^&*(),.?":{}|<>]/.test(passInput);
+                if (!isStrong) {
+                    triggerShake();
+                    return alert("WEAK SEAL: Password must meet all requirements!");
+                }
+
+                if (!userInput) return alert("Choose a codename!");
+
+                document.getElementById('btn-text').innerText = "Summoning...";
+
+                const data = await apiRequest('/signup', { 
+                    username: userInput, 
+                    email: smallEmail, 
+                    password: passInput 
+                });
+
+                // THE FIX: Changed to toLowerCase() so it catches "check your email" perfectly every time!
+                if (data.msg.toLowerCase().includes("check your email") || data.msg.toLowerCase().includes("successful")) {
+                    localStorage.setItem('tempEmail', smallEmail);
+                    
+                    document.getElementById('auth-container').style.display = "none";
+                    document.getElementById('otp-container').style.display = "block";
+                    document.getElementById('title').innerText = "Verify Gmail";
+                    document.getElementById('otp-success-msg').innerText = "✅ Code sent successfully to " + smallEmail;
+                    
+                } else {
+                    document.getElementById('btn-text').innerText = "Register";
+                    triggerShake();
+                    alert(data.msg); 
+                }
+            }
+        };
+
+        // --- SUBMITTING THE OTP CODE ---
+        document.getElementById('otpForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const email = localStorage.getItem('tempEmail');
+            const code = document.getElementById('otp-input').value.trim();
+            
+            const data = await apiRequest('/verify', { email, code });
+            
+            // Fixed case-sensitivity here too just in case!
+            if (data.msg.toLowerCase().includes("success")) {
+                alert("ACCOUNT ACTIVATED! You can now log in.");
+                location.reload(); 
+            } else {
+                triggerShake();
+                alert(data.msg);
+            }
+        };
+    </script>
+</body>
+</html>
