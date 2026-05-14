@@ -8,7 +8,7 @@ const User = require('../models/User');
 
 const transporter = nodemailer.createTransport({
     host: 'smtp-relay.brevo.com',
-    port: 587,
+    port: 2525,
     secure: false, 
     auth: {
         user: process.env.EMAIL_USER,
@@ -20,7 +20,7 @@ transporter.verify((error, success) => {
     if (error) {
         console.error('❌ Email Config Error:', error.message);
     } else {
-        console.log('✅ Brevo SMTP ready to Summon!');
+        console.log('✅ Developer Email service ready to Summon on Port 2525!');
     }
 });
 
