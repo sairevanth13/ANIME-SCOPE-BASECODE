@@ -6,23 +6,24 @@ const jwt = require('jsonwebtoken'); // ADDED THIS FOR LOGIN TOKENS
 const User = require('../models/User');
 
 // 1. Setup the Email Sender
+// 1. Setup the Email Sender (Render-Proofed)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false
+    },
+    // THIS IS THE MAGIC LINE FOR THE ENETUNREACH ERROR:
+    // It forces the cloud server to use IPv4 just like your local machine
+    dnsLookup: (hostname, options, callback) => {
+        require('dns').lookup(hostname, { family: 4 }, callback);
     }
 });
-
-// Test email connection
-transporter.verify((error, success) => {
-    if (error) {
-        console.error('❌ Email Config Error:', error.message);
-    } else {
-        console.log('✅ Email service ready');
-    }
-});
-
 // --- ROUTE: SIGNUP (Sends the email) ---
 router.post('/signup', async (req, res) => {
     try {
