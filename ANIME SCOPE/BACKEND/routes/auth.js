@@ -14,10 +14,12 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
-    connectionTimeout: 5000, // 5 second timeout
-    socketTimeout: 5000,
+    connectionTimeout: 10000, // 10 second timeout
+    socketTimeout: 10000,
+    family: 4, // Force IPv4 (fixes ENETUNREACH IPv6 issues)
     tls: {
-        rejectUnauthorized: false // Allow self-signed certs during development
+        rejectUnauthorized: false,
+        minVersion: 'TLSv1.2'
     }
 });
 
