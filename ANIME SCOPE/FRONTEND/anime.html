@@ -157,7 +157,7 @@
 </head>
 <body>
     <div style="padding: 20px 5%;">
-        <a href="#" onclick="history.back(); return false;" class="back-link">← RETURN TO SCOPE</a>
+        <a href="#" onclick="smartReturn(); return false;" class="back-link">← RETURN TO SCOPE</a>
        <div id="anime-details">
     <div style="text-align:center; margin-top:80px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
         <h2 style="font-family:'Orbitron'; color:var(--accent); letter-spacing: 5px; text-shadow: 0 0 10px var(--accent); animation: pulseGlow 1.5s infinite alternate;">
@@ -502,6 +502,20 @@ async function deleteComment(index) {
         fb.comments.splice(index, 1);
         localStorage.setItem(`fb_${animeId}`, JSON.stringify(fb));
         loadFeedback(document.getElementById("api-score").innerText);
+    }
+}
+
+function smartReturn() {
+    
+    const currentDomain = window.location.hostname;
+
+    
+    if (document.referrer && document.referrer.includes(currentDomain)) {
+        
+        window.history.back();
+    } else {
+        
+        window.location.href = '/'; 
     }
 }
     </script>
