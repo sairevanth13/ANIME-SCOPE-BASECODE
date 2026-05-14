@@ -53,8 +53,10 @@ router.post('/signup', async (req, res) => {
         await user.save();
 
      
+        
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+           
+            from: '"AnimeScope Support" <supportanimescope@gmail.com>', 
             to: email,
             subject: 'Verify your AnimeScope Account',
             html: `<h1>Welcome to AnimeScope!</h1>
