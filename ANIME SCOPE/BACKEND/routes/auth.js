@@ -55,13 +55,13 @@ router.post('/signup', async (req, res) => {
      
         
         const mailOptions = {
-           
-            from: '"AnimeScope Support" <supportanimescope@gmail.com>', 
+            from: process.env.EMAIL_USER,
             to: email,
             subject: 'Verify your AnimeScope Account',
             html: `<h1>Welcome to AnimeScope!</h1>
                    <p>Your verification code is: <b>${verificationCode}</b></p>`
         };
+
 
         try {
             await transporter.sendMail(mailOptions);
