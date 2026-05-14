@@ -5,38 +5,25 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken'); // ADDED THIS FOR LOGIN TOKENS
 const User = require('../models/User');
 
-// 1. Setup the Email Sender with improved configuration
+// 1. Setup the Email Sender
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    service: 'gmail',
     port: 587,
-    secure: false, // Use STARTTLS
+    secure: false,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    },
-    connectionTimeout: 10000, // 10 second timeout
-    socketTimeout: 10000,
-    family: 4, // Force IPv4 (fixes ENETUNREACH IPv6 issues)
-    tls: {
-        rejectUnauthorized: false,
-        minVersion: 'TLSv1.2'
     }
 });
 
-// Test email connection with retry logic
-const verifyEmailConnection = () => {
-    transporter.verify((error, success) => {
-        if (error) {
-            console.error('❌ Email Config Error:', error.message);
-            console.log('⚠️  Retrying email connection in 5 seconds...');
-            setTimeout(verifyEmailConnection, 5000); // Retry after 5 seconds
-        } else {
-            console.log('✅ Email service ready');
-        }
-    });
-};
-
-verifyEmailConnection();
+// Test email connection
+transporter.verify((error, success) => {
+    if (error) {
+        console.error('❌ Email Config Error:', error.message);
+    } else {
+        console.log('✅ Email service ready');
+    }
+});
 
 // --- ROUTE: SIGNUP (Sends the email) ---
 router.post('/signup', async (req, res) => {
@@ -83,16 +70,6 @@ router.post('/signup', async (req, res) => {
             console.log('✅ Email sent successfully to', email);
         } catch (emailErr) {
             console.error('❌ Email send failed:', emailErr.message);
-            console.error('📋 Error details:', emailErr.code, emailErr.response);
-            
-            // Check for specific Gmail auth issues
-            if (emailErr.message.includes('Invalid login') || emailErr.message.includes('authentication failed')) {
-                console.error('⚠️  Gmail authentication issue - Check EMAIL_USER and EMAIL_PASS in .env');
-            }
-            if (emailErr.message.includes('connect')) {
-                console.error('⚠️  Connection timeout - Check internet and Gmail SMTP access');
-            }
-            
             return res.status(500).json({ msg: `Email Error: ${emailErr.message}` });
         }
         

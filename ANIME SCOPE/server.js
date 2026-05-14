@@ -31,21 +31,6 @@ app.use((req, res) => {
 
 
 const PORT = process.env.PORT || 5000;
-
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`🚀 AnimeScope is LIVE at https://localhost:${PORT}`);
-});
-
-// Handle port already in use
-server.on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-        console.error(`❌ Port ${PORT} is already in use. Please:`, 
-            '\n   1. Kill the process using: netstat -ano | findstr :5000',
-            '\n   2. Or change PORT in .env to a different port',
-            '\n   3. Or restart your system');
-        process.exit(1);
-    } else {
-        console.error('❌ Server Error:', err);
-        process.exit(1);
-    }
 });
