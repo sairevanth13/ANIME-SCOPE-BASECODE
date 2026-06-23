@@ -362,6 +362,8 @@ search.oninput = () => {
             const d = await res.json(); 
             
             if (d.data && d.data.length > 0) {
+                // Add search results to animeList so toggle functions can find them
+                animeList = d.data;
                 render(d.data, true); 
             } else {
                         
